@@ -247,7 +247,7 @@ def credits_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawLabel('Roll Credits!!!', 400, 100, fill = 'white', size = 40, bold = True)
     drawLine(140, 150, 660, 150, fill = 'white', lineWidth = 2)
-    drawLabel('The Team: Derrick, Han, Kurt, Spanden', 400, 200, fill = 'limeGreen', size = 25)
+    drawLabel('The Team: Derrick, Hans, Kurt, Spanden', 400, 200, fill = 'limeGreen', size = 25)
     drawLabel('The Class: 15-112, CMU', 400, 250, fill = 'limeGreen', size = 25)
     drawLabel('The Date: 11/16/24', 400, 300, fill = 'limeGreen', size = 25)
     drawLabel('...and a MASSIVE thank you to Kosbie, Austin,', 400, 350, fill = 'limeGreen', size = 25)
