@@ -18,6 +18,7 @@ def onAppStart(app):
     app.map = 'cmumap.jpg'
     app.pin = (400, 80)
     app.score = 0
+    app.scoreIncrement = 0
     app.roundNum = 4
     lon = 40.443261
     lat = -79.944250
@@ -91,6 +92,8 @@ def mainScreen_onMouseMove(app, mouseX, mouseY):
 
 def mainScreen_onMousePress(app, mouseX, mouseY):
     if mouseInStartGameButton(app, mouseX, mouseY, 460, 170, 150, 50):
+        app.score = 0
+        app.roundNum = 1
         setActiveScreen('game')
     elif mouseInHowToPlayButton(mouseX, mouseY, 460, 230, 150, 50):
         setActiveScreen('howToPlay')
@@ -354,10 +357,13 @@ def score_redrawAll(app):
     drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
     drawCircle(app.currLoc[0], app.currLoc[1], 10, fill = 'purple')
     drawLine(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1], fill = 'black')
-
-    drawLabel(f'You were {rounded(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
-    drawLabel(f'Score + {app.score}', 600, 80, fill = 'black', size = 30, bold = True)
-
+    rawDistance = pythonRound(((distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1])))/90 * 130)
+    drawLabel(f'You were {rawDistance}m away.', 600, 50, fill = 'black', size = 30, bold = True)
+    # drawLabel(f'Score + {app.score}', 600, 80, fill = 'black', size = 30, bold = True)
+    if int(1000 - 3*rawDistance) > 0:
+        drawLabel(f'Score + {int(1000 - 3*rawDistance)}', 600, 85, fill = 'black', size = 25, bold = True)
+    else:
+        drawLabel(f'Score + 0', 600, 85, fill = 'black', size = 25, bold = True)
     drawLabel('Continue?', 600, 145, fill = 'limeGreen', size = 15, bold = True)
 
 def score_onMouseMove(app, mouseX, mouseY):
@@ -369,7 +375,9 @@ def score_onMousePress(app, mouseX, mouseY):
     if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50) and app.roundNum == 5:
         setActiveScreen('end')
     elif mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
-        app.score += 10
+        rawDistance = (pythonRound(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1])))//90 * 130
+        if int(1000 - 5*rawDistance) >= 0:
+            app.score += (int(1000 - 3*rawDistance))
         app.roundNum += 1
         setActiveScreen('game')
         
