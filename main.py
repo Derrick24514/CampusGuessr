@@ -1,20 +1,28 @@
 from cmu_graphics import *
 import math
 from spot import Spot
+from leaderboardentry import leaderboardEntry
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
     app.width = 800
     app.height = 600
-    app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
+    app.leaderboard = {}
+    # for i in range(1,11):
+    #     app.leaderboard[i] = str(leaderboardEntry('Kurt',69))
+    grabLeaderBoard(app)
+    app.leaderboard[2] = leaderboardEntry('Derrick',60)
+    print(app.leaderboard)
+    saveLeaderBoard(app)
     # app.globe = 
     app.map = 'cmumap.jpg'
     app.pin = (400, 80)
     app.score = 0
     app.roundNum = 4
-    lon = 40.444623
-    lat = -79.943013
+    lon = 40.443261
+    lat = -79.944250
     app.image = Spot(lon,lat,0,-0.76)
+    app.image.getImage()
     app.currLoc = app.image.latLonToPoint()
     
     app.startGameHighlight = 'white'
@@ -50,7 +58,7 @@ def mainScreen_redrawAll(app):
     drawLine(400, 160, 400, 580, lineWidth = 5, fill = 'white')
     drawLine(80, 225, 320, 225, lineWidth = 2, fill = 'white')
     for key in app.leaderboard:
-        drawLabel(f'{key}: {app.leaderboard[key]}', 120, 220 + 32*key, size = 20, fill = 'white')
+        drawLabel(f'{key}: {app.leaderboard[key]}', 120, 220 + 32*key, size = 20, fill = 'white',align = 'left')
 
     drawLabel('CampusGuessr', 400, 80, size = 60, fill = 'white', bold = True)
     drawLabel('>>>>>>>>>>>>>>>>>>>>>>>>>>', 400, 140, size = 30, fill = 'white')
@@ -399,6 +407,19 @@ def mouseInBackToHomeButton(app, mouseX, mouseY, rectX, rectY, width, height):
 def distance(x0, y0, x1, y1):
     return math.sqrt((x1-x0)**2 + (y1-y0)**2)
     
+def grabLeaderBoard(app):
+    num = 1
+    with open('leaderboard.txt','r') as file:
+        for line in file:
+            app.leaderboard[num] = line.strip()
+            num += 1
+    pass
+
+def saveLeaderBoard(app):
+    with open('leaderboard.txt','w') as file:
+        for player in app.leaderboard:
+            file.write(str(app.leaderboard[player])+'\n')
+
 def findRandomPoint():
     pass
 
