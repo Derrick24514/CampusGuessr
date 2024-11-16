@@ -1,6 +1,6 @@
-from cmu_cpcs_utils import *
 from cmu_graphics import *
 import math
+from spot import Spot
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
@@ -8,11 +8,13 @@ def onAppStart(app):
     app.height = 600
     app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
     # app.globe = 
-    app.map = 'cmu://872385/35004161/Hack112+Map+Final.png'
+    app.map = 'cmumap.jpg'
     app.pin = (400, 80)
-    app.currLoc = (560, 500)
-    app.roundNum = 1
     app.score = 0
+    lon = 40.444623
+    lat = -79.943013
+    app.image = Spot(lon,lat,0,-0.76)
+    app.currLoc = app.image.latLonToPoint()
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -30,7 +32,6 @@ def onAppStart(app):
     app.noButtonHighlight = 'white'
     app.guessButtonHighlight = 'white'
     app.submitButtonHighlight = 'black'
-    app.continueButtonHighlight = 'black'
     
 def mainScreen_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
@@ -121,15 +122,13 @@ def mouseInXButton(app, mouseX, mouseY, rectX, rectY, width, height):
 
 def game_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
+    drawImage('street_view_image.jpg',0,0)
     drawRect(740, 20, 40, 40, fill = None, border = app.gameXButtonHighlight, borderWidth = 2)
-    drawRect(620, 400, 160, 160, fill = None, border = app.guessButtonHighlight)
+    drawRect(600, 400, 160, 160, fill = None, border = 'white')
     
     drawLabel('X', 760, 40, size = 40, fill = 'red')
-    drawLabel('Guess', 700, 460, size = 30, fill = 'limeGreen')
-    drawLabel('Location', 700, 500, size = 30, fill = 'limeGreen')
-    drawLabel(f'Round:', 705, 160, size = 40, fill = 'white', bold = True)
-    drawLabel(f'{app.roundNum}', 700, 220, size = 50, fill = 'white')
-    drawLabel(f'Score: {app.score}', 700, 300, size = 30, fill = 'limeGreen')
+    drawLabel('Guess', 680, 460, size = 30, fill = 'limeGreen')
+    drawLabel('Location', 680, 500, size = 30, fill = 'limeGreen')
     
 
 def game_onMouseMove(app, mouseX, mouseY):
@@ -139,14 +138,24 @@ def game_onMouseMove(app, mouseX, mouseY):
         app.gameXButtonHighlight = 'white'
     if mouseInGuessButton(app, mouseX, mouseY, 600, 400, 160, 160):
         app.guessButtonHighlight = 'limeGreen'
-    else:
-        app.guessButtonHighlight = 'white'
 
 def game_onMousePress(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
         setActiveScreen('areYouSure')
-    elif mouseInGuessButton(app, mouseX, mouseY, 620, 400, 160, 160):
+    elif mouseInGuessButton(app, mouseX, mouseY, 600, 400, 160, 160):
         setActiveScreen('guess')
+
+def game_onKeyPress(app,key):
+    if key == 'up':
+        app.image.changePitchUp()
+    elif key == 'down':
+        app.image.changePitchDown()
+    elif key == 'left':
+        app.image.changeHeadingLeft()
+    elif key == 'right':
+        app.image.changeHeadingRight()
+    app.image.getImage()
+    
 
 #--------* are you sure secondary screen
 
@@ -247,7 +256,7 @@ def credits_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawLabel('Roll Credits!!!', 400, 100, fill = 'white', size = 40, bold = True)
     drawLine(140, 150, 660, 150, fill = 'white', lineWidth = 2)
-    drawLabel('The Team: Derrick, Hans, Kurt, Spanden', 400, 200, fill = 'limeGreen', size = 25)
+    drawLabel('The Team: Derrick, Han, Kurt, Spanden', 400, 200, fill = 'limeGreen', size = 25)
     drawLabel('The Class: 15-112, CMU', 400, 250, fill = 'limeGreen', size = 25)
     drawLabel('The Date: 11/16/24', 400, 300, fill = 'limeGreen', size = 25)
     drawLabel('...and a MASSIVE thank you to Kosbie, Austin,', 400, 350, fill = 'limeGreen', size = 25)
@@ -273,12 +282,11 @@ def credits_onMousePress(app, mouseX, mouseY):
 def guess_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawImage(app.map, 0, 0)
-    
     drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
     drawLabel('Click around to guess!', 550, 40, fill = 'black', size = 30, bold = True)
     
     drawRect(40, 520, 160, 60, fill = 'black', border = app.submitButtonHighlight, borderWidth = 2)
-    drawLabel('Submit guess', 120, 550, fill = 'limeGreen', size = 20, bold = True)
+    drawLabel('Submit guess', 120, 550, fill = 'limeGreen', size = 10, bold = True)
     
     drawRect(740, 20, 40, 40, fill = None, border = app.guessXButtonHighlight, borderWidth = 2)
     drawLabel('X', 760, 40, size = 40, fill = 'red')
@@ -296,8 +304,9 @@ def guess_onMouseMove(app, mouseX, mouseY):
 def guess_onMousePress(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
         setActiveScreen('game')
-    elif not mouseInSubmitButton(app, mouseX, mouseY, 40, 520, 160, 60):
+    else:
         app.pin = (mouseX, mouseY)
+        print(app.pin)
     if mouseInSubmitButton(app, mouseX, mouseY, 40, 520, 160, 60):
         setActiveScreen('score')
         
@@ -323,33 +332,14 @@ def mouseInPin(mouseX, mouseY, pinX, pinY, pinR):
 def score_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawImage(app.map, 0, 0)
-    # connects to continue logic
-    drawRect(550, 120, 100, 50, fill = 'black', border = app.continueButtonHighlight, borderWidth = 2)
     
     drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
     drawCircle(app.currLoc[0], app.currLoc[1], 10, fill = 'purple')
     drawLine(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1], fill = 'black')
 
-    drawLabel(f'You were {round(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
-    drawLabel(f'Score + {app.score}', 600, 85, fill = 'black', size = 25, bold = True)
-    drawLabel('Continue?', 600, 145, fill = 'limeGreen', size = 15, bold = True)
-
-def score_onMouseMove(app, mouseX, mouseY):
-    if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
-        app.continueButtonHighlight = 'limeGreen'
-    else:
-        app.continueButtonHighlight = 'black'
-
-def score_onMousePress(app, mouseX, mouseY):
-    if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
-        setActiveScreen('game')
-        
-def mouseInContinueButton(app, mouseX, mouseY, rectX, rectY, width, height):
-    if (rectX <= mouseX <= rectX + width) and (rectY <= mouseY <= rectY + height):
-        return True
-    else:
-        return False
-
+    drawLabel(f'You were {rounded(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
+    drawLabel(f'Score + {app.score}', 600, 80, fill = 'black', size = 30, bold = True)
+    
 # other functions
     
 def distance(x0, y0, x1, y1):
