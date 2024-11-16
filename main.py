@@ -1,6 +1,8 @@
 from cmu_cpcs_utils import *
 from cmu_graphics import *
 import math
+from spot import Spot
+from PIL import Image
 
 def onAppStart(app):
     setActiveScreen('mainScreen')

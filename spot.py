@@ -15,10 +15,10 @@ class Spot:
     def __repr__(self):
         return f'Longitude of {self.longitude}, latitude of {self.latitude}, heading of {self.heading}, and pitch of {self.pitch}'
     
-    def changeHeadingUp(self):
+    def changeHeadingRight(self):
         self.heading += 10
     
-    def changeHeadingDown(self):
+    def changeHeadingLeft(self):
         self.heading -= 10
     
     def changePitchUp(self):
@@ -31,24 +31,39 @@ class Spot:
         API_KEY = "AIzaSyDjKrXMaHoiZSSQ-_yI-Gl57qytkcoFSKA"
         BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
         params = {
-            "size": "600x300",
-            "location": f"{self.latitude},{self.longitude}",
+            "size": "600x600", # max size limited to 640 x 640
+            "location": f'{self.longitude},{self.latitude}',
             "heading": f'{self.heading}',
-            "pitch": f"{self.pitch}",
+            "pitch": f'{self.pitch}',
             "key": API_KEY
         }
         response = requests.get(BASE_URL, params=params)
-
         if response.status_code == 200:
             image_filename = "street_view_image.jpg"
             with open(image_filename, "wb") as file:
                 file.write(response.content)
                 print(f'Street View Image saved as {image_filename}')
+        elif response.status_code == 204:
+            print('No Image Found')
         else:
             print(f'Error: {response.status_code}. Unable to fetch the image.')
-
-
-        print(response)
-        print(type(response))
     # with open("street_view.jpg", "wb") as file:
     #     file.write(response.content)
+
+    def latLonToPoint(self):
+        tx,ty = (40.448876,-79.951906)
+        bx,by = (40.440118,-79.937617)
+        width = abs(tx-bx)
+        height = abs(ty-by)
+        percentx = abs(self.longitude - bx)/width
+        percenty = abs(self.latitude - by)/height
+        coordx,coordy = 800*percentx, 600*percenty
+        return coordx,coordy
+
+    def moveView(self):
+        pass
+
+lon = 40.443960
+lat = -79.942791
+image = Spot(lon,lat,151.78,-0.76)
+image.latLonToPoint()

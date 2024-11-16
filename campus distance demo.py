@@ -4,15 +4,6 @@ from PIL.ExifTags import TAGS
 import os
 import math
 import pyproj
-from shapely.geometry import Point, Polygon
-
-polygon_points = [(346, 10), (690, 17), (894, 510), (684, 681), (197, 549)]
-polygon = Polygon(polygon_points)
-
-def is_point_in_polygon(x, y, polygon):
-    point = Point(x, y)
-    return polygon.contains(point)
-
 
 def get_coordinate(image_path):
 
@@ -75,14 +66,13 @@ def screen_to_geo(screen_x, screen_y, width, height):
 def loadPilImage(filePath):
     return Image.open(filePath)
 
-def distance(x0, y0, x1, y1):
-    return math.sqrt((x1-x0)**2 + (y1-y0)**2)
-
 def onAppStart(app):
     app.width=900
     app.height=700
     setupCmuMap(app)
-    app.coordinates = (40.4433333,-79.9446666)
+    lat = 41
+    lon = -79.940990
+    app.coordinates = (lat,lon)
     app.coordx=app.coordinates[0]
     app.coordy=-app.coordinates[1]
     app.click_coordinates = None
@@ -90,7 +80,7 @@ def onAppStart(app):
     app.target_dot=(app.target_dot[0]-100,app.target_dot[1]+350)
 
 def setupCmuMap(app):
-    app.cmufilePath = '/Users/hans/Documents/Code/.venv/Screenshot 2024-11-15 at 9.32.48 PM.png'  
+    app.cmufilePath ='/Users/kurtschimmel/Desktop/cmuguess/campusguess/Screenshot 2024-11-15 at 9.32.48 PM.jpeg'
     cmupilImage = loadPilImage(app.cmufilePath)
 
     app.imageWidth, app.imageHeight = cmupilImage.size
@@ -116,17 +106,8 @@ def drawGuessDot(app):
     
     drawRect(0,600,200,84,fill='green')
 
-
 def onMousePress(app,mouseX,mouseY):
-    print('pressed')
     app.click_coordinates=mouseX,mouseY
-    x,y=app.target_dot
-    print(distance(mouseX,mouseY,x,y))
-    print(is_point_in_polygon(mouseX, mouseY, polygon))
-    
-
-
 
 
 runApp()
-
