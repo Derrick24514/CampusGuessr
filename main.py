@@ -3,7 +3,6 @@ import math
 from spot import Spot
 import random
 from leaderboardentry import leaderboardEntry
-from sortedcontainers import SortedList
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
@@ -17,6 +16,7 @@ def onAppStart(app):
     app.pin = (400, 80)
     app.score = 0
     app.scoreIncrement = 0
+    app.name = ''
     app.roundNum = 4
     app.lon = random.uniform(40.44018, 40.448876)
     app.lat = random.uniform(-79.951096, -79.937617)
@@ -42,6 +42,12 @@ def onAppStart(app):
     app.submitButtonHighlight = 'black'
     app.continueButtonHighlight = 'black'
     app.backToHomeHighlight = 'white'
+
+    app.stepsPerSecond=30
+    app.guessTime=20
+    app.clockVisible=True
+    app.counter=0
+    app.clock=0
 
     
 def mainScreen_redrawAll(app):
@@ -110,6 +116,7 @@ def mainScreen_onMousePress(app, mouseX, mouseY):
     if mouseInStartGameButton(app, mouseX, mouseY, 460, 170, 150, 50):
         app.score = 0
         app.roundNum = 1
+        app.name = ''
         setActiveScreen('game')
     elif mouseInHowToPlayButton(mouseX, mouseY, 460, 230, 150, 50):
         setActiveScreen('howToPlay')
@@ -389,7 +396,7 @@ def score_onMouseMove(app, mouseX, mouseY):
         app.continueButtonHighlight = 'black'
 def score_onMousePress(app, mouseX, mouseY):
     if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50) and app.roundNum == 5:
-        setActiveScreen('end')
+        setActiveScreen('name')
     elif mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
         rawDistance = (pythonRound(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1])))//90 * 130
         if int(1000 - 5*rawDistance) >= 0:
@@ -412,6 +419,7 @@ def mouseInContinueButton(app, mouseX, mouseY, rectX, rectY, width, height):
 # endGame
 def end_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
+    drawLabel(f'Player Name: {app.name}', 400, 150, size = 50, fill = 'limeGreen')
     drawLabel('Final Score:', 400, 230, size = 50, fill = 'limeGreen')
     drawLabel(f'{app.score}', 400, 290, size = 50, fill = 'limeGreen')
     drawLabel('Back to Home', 400, 400, fill = 'limeGreen', size = 25)
@@ -431,6 +439,27 @@ def mouseInBackToHomeButton(app, mouseX, mouseY, rectX, rectY, width, height):
     else:
         return False
     
+# enter name screen
+def name_onKeyPress(app, key):
+    if key == 'backspace' and len(app.name) > 0:
+        app.name = app.name[:-1]
+    elif key == 'space':
+        app.name += ' '
+    elif key == 'enter':
+        setActiveScreen('end')
+    elif len(app.name) <= 10 and key.isalnum():
+        app.name += key
+        
+def name_redrawAll(app):
+    drawRect(0, 0, 800, 600, fill = 'black')
+    drawRect(300, 250, 200, 200, fill = None, border = 'white')
+    drawLabel('Type your name:', 400, 280, size = 20, fill = 'limeGreen', bold=True)
+    if app.name == '' or app.name == 'backspace':
+        drawLabel('Type a name', 400, 310, size = 20, fill = 'limeGreen')
+    else:
+        drawLabel(f"{app.name}", 400, 310, size = 20, fill = 'limeGreen')
+    drawLabel('Press enter', 400, 380, size = 30, fill = 'limeGreen', bold = True)
+    drawLabel('when done', 400, 410, size = 30, fill = 'limeGreen', bold = True)
 # other functions
     
 def distance(x0, y0, x1, y1):
@@ -478,11 +507,13 @@ def onAppStart(app):
     app.pin = (400, 80)
     app.score = 0
     app.roundNum = 4
+    app.name = ''
     lon = 40.443261
     lat = -79.944250
     app.image = Spot(lon,lat,0,-0.76)
     app.image.getImage()
     app.currLoc = app.image.latLonToPoint()
+
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -556,8 +587,6 @@ def game_onStep(app):
             app.clockVisible=True
             setActiveScreen('game')
             
-        
-
 
     
 def mainScreen_redrawAll(app):
