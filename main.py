@@ -6,7 +6,7 @@ def onAppStart(app):
     app.width = 800
     app.height = 600
     app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
-    app.globe = 
+    # app.globe = 
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
