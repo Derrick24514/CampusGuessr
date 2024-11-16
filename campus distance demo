@@ -106,6 +106,18 @@ def drawGuessDot(app):
 
 def onMousePress(app,mouseX,mouseY):
     app.click_coordinates=mouseX,mouseY
+    print(is_point_in_polygon(mouseX, mouseY, polygon))
 
+
+from shapely.geometry import Point, Polygon
+
+polygon_points = [(346, 10), (690, 17), (894, 510), (684, 681), (197, 549)]
+
+polygon = Polygon(polygon_points)
+
+def is_point_in_polygon(x, y, polygon):
+    point = Point(x, y)
+    return polygon.contains(point)
 
 runApp()
+
