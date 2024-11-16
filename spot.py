@@ -32,7 +32,7 @@ class Spot:
         BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
         params = {
             "size": "600x300",
-            "location": f"{self.longitude},{self.latitude}",
+            "location": f"{self.latitude},{self.longitude}",
             "heading": f'{self.heading}',
             "pitch": f"{self.pitch}",
             "key": API_KEY
@@ -50,7 +50,5 @@ class Spot:
 
         print(response)
         print(type(response))
-# with open("street_view.jpg", "wb") as file:
-#     file.write(response.content)
-
-        image_path = "/Users/hans/Downloads/CMUImages/IMG_1030.JPG"
+    # with open("street_view.jpg", "wb") as file:
+    #     file.write(response.content)

@@ -7,37 +7,42 @@ from PIL.ExifTags import TAGS
 from spot import Spot
 # spandan
 
+
 lat = 40.443703
 lon = -79.945351
+image = Spot(lon,lat,"151.78","-0.76")
+image.getImage()
+print(image)
 
 
-API_KEY = "AIzaSyDjKrXMaHoiZSSQ-_yI-Gl57qytkcoFSKA"
-BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
-params = {
-    "size": "600x300",
-    "location": f"{lat},{lon}",
-    "heading": "151.78",
-    "pitch": "-0.76",
-    "key": API_KEY
-}
 
-response = requests.get(BASE_URL, params=params)
+# API_KEY = "AIzaSyDjKrXMaHoiZSSQ-_yI-Gl57qytkcoFSKA"
+# BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
+# params = {
+#     "size": "600x300",
+#     "location": f"{lat},{lon}",
+#     "heading": "151.78",
+#     "pitch": "-0.76",
+#     "key": API_KEY
+# }
 
-if response.status_code == 200:
-    image_filename = "street_view_image.jpg"
-    with open(image_filename, "wb") as file:
-        file.write(response.content)
-    print(f'Street View Image saved as {image_filename}')
-else:
-    print(f'Error: {response.status_code}. Unable to fetch the image.')
+# response = requests.get(BASE_URL, params=params)
+
+# if response.status_code == 200:
+#     image_filename = "street_view_image.jpg"
+#     with open(image_filename, "wb") as file:
+#         file.write(response.content)
+#     print(f'Street View Image saved as {image_filename}')
+# else:
+#     print(f'Error: {response.status_code}. Unable to fetch the image.')
 
 
-print(response)
-print(type(response))
-# with open("street_view.jpg", "wb") as file:
-#     file.write(response.content)
+# print(response)
+# print(type(response))
+# # with open("street_view.jpg", "wb") as file:
+# #     file.write(response.content)
 
-image_path = "/Users/hans/Downloads/CMUImages/IMG_1030.JPG"
+# image_path = "/Users/hans/Downloads/CMUImages/IMG_1030.JPG"
 
 
 
