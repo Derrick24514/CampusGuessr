@@ -21,8 +21,10 @@ def onAppStart(app):
     app.creditsXButtonHighlight = 'white'
     app.yesButtonHighlight = 'white'
     app.noButtonHighlight = 'white'
-    app.image = Spot(40.442657,-79.943561,"151.78","-0.76")
-    pilImage = Image.open('/Users/spandanchandra/Python Project/campusguess/campusguess/street_view_image.jpg')
+    lon = 40.443960
+    lat = -79.942791
+    app.image = Spot(lon,lat,151.78,-0.76)
+    pilImage = Image.open('street_view_image.jpg')
     app.cmuImage=CMUImage(pilImage)
 
     
@@ -130,10 +132,12 @@ def game_onKeyPress(app, key):
     elif key == 'down':
         app.image.changePitchDown()
     elif key == 'right':
-        app.image.changeHeadingUp()
+        app.image.changeHeadingRight()
     elif key == 'left':
-        app.image.changeHeadingDown()
+        app.image.changeHeadingLeft()
     app.image.getImage()
+    pilImage = Image.open('street_view_image.jpg')
+    app.cmuImage=CMUImage(pilImage)
 
 #--------* are you sure secondary screen
 

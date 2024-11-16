@@ -32,14 +32,12 @@ class Spot:
         BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
         params = {
             "size": "600x300",
-            "location": f'{self.latitude},{self.longitude}',
+            "location": f'{self.longitude},{self.latitude}',
             "heading": f'{self.heading}',
             "pitch": f'{self.pitch}',
             "key": API_KEY
         }
         response = requests.get(BASE_URL, params=params)
-        print(response.content)
-        print(response.status_code)
         if response.status_code == 200:
             image_filename = "street_view_image.jpg"
             with open(image_filename, "wb") as file:
@@ -49,9 +47,6 @@ class Spot:
             print('No Image Found')
         else:
             print(f'Error: {response.status_code}. Unable to fetch the image.')
-
-        print(response)
-        print(type(response))
     # with open("street_view.jpg", "wb") as file:
     #     file.write(response.content)
 
