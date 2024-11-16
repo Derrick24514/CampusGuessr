@@ -1,0 +1,5 @@
+from player import Player
+
+newPlayer = Player(435, 427, 1, 2)
+print(newPlayer.getLatLongForClick())
+

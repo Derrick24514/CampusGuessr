@@ -1,18 +1,16 @@
 from cmu_graphics import *
 import math
 from spot import Spot
+import random
 from leaderboardentry import leaderboardEntry
+from sortedcontainers import SortedList
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
     app.width = 800
     app.height = 600
     app.leaderboard = {}
-    # for i in range(1,11):
-    #     app.leaderboard[i] = str(leaderboardEntry('Kurt',69))
     grabLeaderBoard(app)
-    app.leaderboard[2] = leaderboardEntry('Derrick',60)
-    print(app.leaderboard)
     saveLeaderBoard(app)
     # app.globe = 
     app.map = 'cmumap.jpg'
@@ -20,9 +18,9 @@ def onAppStart(app):
     app.score = 0
     app.scoreIncrement = 0
     app.roundNum = 4
-    lon = 40.443261
-    lat = -79.944250
-    app.image = Spot(lon,lat,0,-0.76)
+    app.lon = random.uniform(40.44018, 40.448876)
+    app.lat = random.uniform(-79.951096, -79.937617)
+    app.image = Spot(app.lon,app.lat,0,-0.76)
     app.image.getImage()
     app.currLoc = app.image.latLonToPoint()
     
@@ -53,6 +51,7 @@ def mainScreen_redrawAll(app):
     drawRect(460, 230, 150, 50, fill = None, border = app.howToPlayHighlight, borderWidth = 2)
     drawRect(460, 290, 150, 50, fill = None, border = app.aboutHighlight, borderWidth = 2)
     drawCircle(80, 80, 40, border = app.creditsHighlight)
+    # drawCircle(800, 600, 275, border = 'white')
     drawCircle(800, 600, 275, border = 'white')
     drawCircle(400, 160, 10, fill = 'white')
 
@@ -71,6 +70,23 @@ def mainScreen_redrawAll(app):
     drawLabel('About', 535, 315, size = 20, fill = 'limeGreen')
     drawLabel('Credits', 80, 80, size = 20, fill = 'limeGreen')
     drawLabel('Leaderboard Legends:', 200, 200, size = 20, fill = 'white', bold = True)
+
+def draw_Earth(app):
+    drawCircle(800, 600, 275, border = 'white')
+    # gif_path = 'Rotating_earth_animated_transparent.gif'
+    # gif = Image(open(gif_path))
+    # frame_count = 0
+    # while True:
+    #     frame_path = f"frame_{frame_count}.png"
+    #     gif.save(frame_path)
+    #     frame_count += 1
+    #     try:
+    #         gif.seek(frame_count)
+    #     except EOFError:
+    #         break
+    # frames = [Image(f'frame_{i}.png',800,600) for i in range(10)]
+    # current_frame = 0
+
         
 def mainScreen_onMouseMove(app, mouseX, mouseY):
     if mouseInStartGameButton(app, mouseX, mouseY, 460, 170, 150, 50):
@@ -379,6 +395,11 @@ def score_onMousePress(app, mouseX, mouseY):
         if int(1000 - 5*rawDistance) >= 0:
             app.score += (int(1000 - 3*rawDistance))
         app.roundNum += 1
+        app.lon = random.uniform(40.44018, 40.448876)
+        app.lat = random.uniform(-79.951096, -79.937617)
+        app.image = Spot(app.lon, app.lat, 0, -0.76)
+        app.image.getImage()
+        app.currLoc = app.image.latLonToPoint()
         setActiveScreen('game')
         
     
@@ -427,6 +448,9 @@ def saveLeaderBoard(app):
     with open('leaderboard.txt','w') as file:
         for player in app.leaderboard:
             file.write(str(app.leaderboard[player])+'\n')
+
+def sortLeaderBoard(app):
+    pass
 
 def findRandomPoint():
     pass
