@@ -1,12 +1,14 @@
 from cmu_graphics import *
 import math
+from spot import Spot
+from PIL import Image
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
     app.width = 800
     app.height = 600
     app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
-    app.globe = 
+    # app.globe = 
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -19,6 +21,10 @@ def onAppStart(app):
     app.creditsXButtonHighlight = 'white'
     app.yesButtonHighlight = 'white'
     app.noButtonHighlight = 'white'
+    app.image = Spot(40.442657,-79.943561,"151.78","-0.76")
+    pilImage = Image.open('/Users/spandanchandra/Python Project/campusguess/campusguess/street_view_image.jpg')
+    app.cmuImage=CMUImage(pilImage)
+
     
 def mainScreen_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
@@ -104,6 +110,9 @@ def game_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawRect(740, 20, 40, 40, fill = None, border = app.creditsXButtonHighlight, borderWidth = 2)
     drawLabel('X', 760, 40, size = 40, fill = 'red')
+    drawImage(app.cmuImage, 0, 0)
+
+    
 
 def game_onMouseMove(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
@@ -114,6 +123,17 @@ def game_onMouseMove(app, mouseX, mouseY):
 def game_onMousePress(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
         setActiveScreen('areYouSure')
+    
+def game_onKeyPress(app, key):
+    if key == 'up':
+        app.image.changePitchUp()
+    elif key == 'down':
+        app.image.changePitchDown()
+    elif key == 'right':
+        app.image.changeHeadingUp()
+    elif key == 'left':
+        app.image.changeHeadingDown()
+    app.image.getImage()
 
 #--------* are you sure secondary screen
 

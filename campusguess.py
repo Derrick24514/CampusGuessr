@@ -8,8 +8,8 @@ from spot import Spot
 # spandan
 
 
-lat = 40.443703
-lon = -79.945351
+lat = 40.442657
+lon = -79.943561
 image = Spot(lon,lat,"151.78","-0.76")
 image.getImage()
 print(image)

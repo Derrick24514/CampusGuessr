@@ -52,3 +52,6 @@ class Spot:
         print(type(response))
     # with open("street_view.jpg", "wb") as file:
     #     file.write(response.content)
+
+    def moveView(self):
+        pass
