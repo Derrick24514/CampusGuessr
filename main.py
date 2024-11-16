@@ -10,11 +10,11 @@ def onAppStart(app):
     # app.globe = 
     app.map = 'cmumap.jpg'
     app.pin = (400, 80)
-    app.currLoc = (560, 500)
     app.score = 0
-    lon = 40.444646
-    lat = -79.942992
+    lon = 40.444623
+    lat = -79.943013
     app.image = Spot(lon,lat,0,-0.76)
+    app.currLoc = app.image.latLonToPoint()
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -306,6 +306,7 @@ def guess_onMousePress(app, mouseX, mouseY):
         setActiveScreen('game')
     else:
         app.pin = (mouseX, mouseY)
+        print(app.pin)
     if mouseInSubmitButton(app, mouseX, mouseY, 40, 520, 160, 60):
         setActiveScreen('score')
         
