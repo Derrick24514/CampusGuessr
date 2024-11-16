@@ -1,8 +1,8 @@
-#Campus Guesser
+Campus Guesser
 
 Campus Guesser is a web-based interactive game inspired by GeoGuessr, specifically designed for the Carnegie Mellon University campus. Players are placed in random locations on the campus map and are challenged to guess where they are by interacting with the campus map.
 
-#Features:
+Features:
 5 rounds of gameplay where you are shown a location on the campus and must guess where you are.
 Interactive map and intuitive controls for navigating the map and submitting guesses.
 Leaderboard to track high scores.
@@ -14,7 +14,7 @@ Submit your guess and see how close you were to the actual location.
 Repeat for multiple rounds and try to make it to the leaderboard!
 
 
-#Requirements
+Requirements
 To run this project, you'll need the following Python modules:
 
 cmu_graphics 
