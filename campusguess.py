@@ -4,6 +4,7 @@ import os
 import math
 from PIL import Image
 from PIL.ExifTags import TAGS
+# spandan
 
 lat = 40.443703
 lon = -79.945351
