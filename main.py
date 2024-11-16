@@ -1,3 +1,4 @@
+from cmu_cpcs_utils import *
 from cmu_graphics import *
 import math
 
@@ -6,7 +7,11 @@ def onAppStart(app):
     app.width = 800
     app.height = 600
     app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
-    app.globe = 
+    # app.globe = 
+    app.map = 'cmu://872385/35004161/Hack112+Map+Final.png'
+    app.pin = (400, 80)
+    app.currLoc = (560, 500)
+    app.score = 0
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -17,8 +22,13 @@ def onAppStart(app):
     app.howToPlayXButtonHighlight = 'white'
     app.aboutXButtonHighlight = 'white'
     app.creditsXButtonHighlight = 'white'
+    app.gameXButtonHighlight = 'white'
+    app.guessXButtonHighlight = 'black'
+    
     app.yesButtonHighlight = 'white'
     app.noButtonHighlight = 'white'
+    app.guessButtonHighlight = 'white'
+    app.submitButtonHighlight = 'black'
     
 def mainScreen_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
@@ -98,22 +108,38 @@ def mouseInCreditsButton(mouseX, mouseY, cX, cY, r):
     else:
         return False
 
+        
+def mouseInXButton(app, mouseX, mouseY, rectX, rectY, width, height):
+    if (rectX <= mouseX <= rectX + width) and (rectY <= mouseY <= rectY + height):
+        return True
+    else:
+        return False
+
 # game screen
 
 def game_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
-    drawRect(740, 20, 40, 40, fill = None, border = app.creditsXButtonHighlight, borderWidth = 2)
+    drawRect(740, 20, 40, 40, fill = None, border = app.gameXButtonHighlight, borderWidth = 2)
+    drawRect(600, 400, 160, 160, fill = None, border = 'white')
+    
     drawLabel('X', 760, 40, size = 40, fill = 'red')
+    drawLabel('Guess', 680, 460, size = 30, fill = 'limeGreen')
+    drawLabel('Location', 680, 500, size = 30, fill = 'limeGreen')
+    
 
 def game_onMouseMove(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
-        app.creditsXButtonHighlight = 'limeGreen'
+        app.gameXButtonHighlight = 'limeGreen'
     else:
-        app.creditsXButtonHighlight = 'white'
+        app.gameXButtonHighlight = 'white'
+    if mouseInGuessButton(app, mouseX, mouseY, 600, 400, 160, 160):
+        app.guessButtonHighlight = 'limeGreen'
 
 def game_onMousePress(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
         setActiveScreen('areYouSure')
+    elif mouseInGuessButton(app, mouseX, mouseY, 600, 400, 160, 160):
+        setActiveScreen('guess')
 
 #--------* are you sure secondary screen
 
@@ -235,11 +261,70 @@ def credits_onMousePress(app, mouseX, mouseY):
     if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
         setActiveScreen('mainScreen')
         
-def mouseInXButton(app, mouseX, mouseY, rectX, rectY, width, height):
+# guess screen
+
+def guess_redrawAll(app):
+    drawRect(0, 0, 800, 600, fill = 'black')
+    drawImage(app.map, 0, 0)
+    
+    drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
+    drawLabel('Click around to guess!', 550, 40, fill = 'black', size = 30, bold = True)
+    
+    drawRect(40, 520, 160, 60, fill = 'black', border = app.submitButtonHighlight, borderWidth = 2)
+    drawLabel('Submit guess', 120, 550, fill = 'limeGreen', size = 10, bold = True)
+    
+    drawRect(740, 20, 40, 40, fill = None, border = app.guessXButtonHighlight, borderWidth = 2)
+    drawLabel('X', 760, 40, size = 40, fill = 'red')
+    
+def guess_onMouseMove(app, mouseX, mouseY):
+    if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
+        app.guessXButtonHighlight = 'limeGreen'
+    else:
+        app.guessXButtonHighlight = 'black'
+    if mouseInSubmitButton(app, mouseX, mouseY, 40, 520, 160, 60):
+        app.submitButtonHighlight = 'limeGreen'
+    else:
+        app.submitButtonHighlight = 'black'
+
+def guess_onMousePress(app, mouseX, mouseY):
+    if mouseInXButton(app, mouseX, mouseY, 740, 20, 40, 40):
+        setActiveScreen('game')
+    else:
+        app.pin = (mouseX, mouseY)
+    if mouseInSubmitButton(app, mouseX, mouseY, 40, 520, 160, 60):
+        setActiveScreen('score')
+        
+        # run all score calculations in here
+
+def mouseInGuessButton(app, mouseX, mouseY, rectX, rectY, width, height):
     if (rectX <= mouseX <= rectX + width) and (rectY <= mouseY <= rectY + height):
         return True
     else:
         return False
+        
+def mouseInSubmitButton(app, mouseX, mouseY, rectX, rectY, width, height):
+    if (rectX <= mouseX <= rectX + width) and (rectY <= mouseY <= rectY + height):
+        return True
+    else:
+        return False
+
+def mouseInPin(mouseX, mouseY, pinX, pinY, pinR):
+    return distance(mouseX, mouseY, pinX, pinY) <= pinR
+
+# score screen
+
+def score_redrawAll(app):
+    drawRect(0, 0, 800, 600, fill = 'black')
+    drawImage(app.map, 0, 0)
+    
+    drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
+    drawCircle(app.currLoc[0], app.currLoc[1], 10, fill = 'purple')
+    drawLine(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1], fill = 'black')
+
+    drawLabel(f'You were {round(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
+    drawLabel(f'Score + {app.score}', 600, 80, fill = 'black', size = 30, bold = True)
+    
+# other functions
     
 def distance(x0, y0, x1, y1):
     return math.sqrt((x1-x0)**2 + (y1-y0)**2)
