@@ -55,7 +55,10 @@ class Spot:
         bx,by = (40.440118,-79.937617)
         width = abs(tx-bx)
         height = abs(ty-by)
-        print(width,height)
+        percentx = abs(self.longitude - bx)/width
+        percenty = abs(self.latitude - by)/height
+        coordx,coordy = 800*percentx, 600*percenty
+        return coordx,coordy
 
     def moveView(self):
         pass
