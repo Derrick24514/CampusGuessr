@@ -145,6 +145,18 @@ def game_onMousePress(app, mouseX, mouseY):
     elif mouseInGuessButton(app, mouseX, mouseY, 600, 400, 160, 160):
         setActiveScreen('guess')
 
+def game_onKeyPress(app,key):
+    if key == 'up':
+        app.image.changePitchUp()
+    elif key == 'down':
+        app.image.changePitchDown()
+    elif key == 'left':
+        app.image.changeHeadingLeft()
+    elif key == 'right':
+        app.image.changeHeadingRight()
+    app.image.getImage()
+    
+
 #--------* are you sure secondary screen
 
 def areYouSure_redrawAll(app):
