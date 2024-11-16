@@ -1,4 +1,3 @@
-from cmu_cpcs_utils import *
 from cmu_graphics import *
 import math
 
@@ -341,7 +340,10 @@ def score_onMouseMove(app, mouseX, mouseY):
         app.continueButtonHighlight = 'black'
 
 def score_onMousePress(app, mouseX, mouseY):
-    if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
+    if mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50) and app.roundNum == 5:
+        setActiveScreen('end')
+    elif mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
+        app.roundNum += 1
         setActiveScreen('game')
         
 def mouseInContinueButton(app, mouseX, mouseY, rectX, rectY, width, height):
@@ -349,6 +351,12 @@ def mouseInContinueButton(app, mouseX, mouseY, rectX, rectY, width, height):
         return True
     else:
         return False
+        
+# endGame
+
+def end_redrawAll(app):
+    drawRect(0, 0, 800, 600, fill = 'black')
+    drawLabel('Game Results:', 400, 300, size = 50, fill = 'limeGreen')
 
 # other functions
     
