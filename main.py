@@ -1,6 +1,7 @@
 from cmu_graphics import *
 import math
 from spot import Spot
+import random
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
@@ -12,9 +13,9 @@ def onAppStart(app):
     app.pin = (400, 80)
     app.score = 0
     app.roundNum = 4
-    lon = 40.444623
-    lat = -79.943013
-    app.image = Spot(lon,lat,0,-0.76)
+    app.lon = random.uniform(40.44018, 40.448876)
+    app.lat = random.uniform(-79.951096, -79.937617)
+    app.image = Spot(app.lon,app.lat,0,-0.76)
     app.currLoc = app.image.latLonToPoint()
     
     app.startGameHighlight = 'white'
@@ -363,6 +364,11 @@ def score_onMousePress(app, mouseX, mouseY):
     elif mouseInContinueButton(app, mouseX, mouseY, 550, 120, 100, 50):
         app.score += 10
         app.roundNum += 1
+        app.lon = random.uniform(40.44018, 40.448876)
+        app.lat = random.uniform(-79.951096, -79.937617)
+        app.image = Spot(app.lon, app.lat, 0, -0.76)
+        app.image.getImage()
+        app.currLoc = app.image.latLonToPoint()
         setActiveScreen('game')
         
     
