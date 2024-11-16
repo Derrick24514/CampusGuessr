@@ -25,12 +25,6 @@ PIL (Pillow)
 shapely
 You can install these dependencies using pip:
 
-/CampusGuessr
-  ├── main.py           # Main script to run the application
-  ├── cmu_graphics.py   # Custom graphics library for the app
-  ├── spot.py           # Custom class to represent locations on the map
-  └── README.txt        # This file
-
 Acknowledgments:
 The game was created as part of the Hack112 competition at Carnegie Mellon University.
 Special thanks to our TAs, Kosbie, and Austin for their guidance and support.
