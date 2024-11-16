@@ -31,7 +31,7 @@ class Spot:
         API_KEY = "AIzaSyDjKrXMaHoiZSSQ-_yI-Gl57qytkcoFSKA"
         BASE_URL = "https://maps.googleapis.com/maps/api/streetview"
         params = {
-            "size": "600x300",
+            "size": "600x600", # max size limited to 640 x 640
             "location": f'{self.longitude},{self.latitude}',
             "heading": f'{self.heading}',
             "pitch": f'{self.pitch}',
@@ -50,5 +50,17 @@ class Spot:
     # with open("street_view.jpg", "wb") as file:
     #     file.write(response.content)
 
+    def latLonToPoint(self):
+        tx,ty = (40.448876,-79.951906)
+        bx,by = (40.440118,-79.937617)
+        width = abs(tx-bx)
+        height = abs(ty-by)
+        print(width,height)
+
     def moveView(self):
         pass
+
+lon = 40.443960
+lat = -79.942791
+image = Spot(lon,lat,151.78,-0.76)
+image.latLonToPoint()

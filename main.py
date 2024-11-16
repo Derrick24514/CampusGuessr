@@ -109,10 +109,10 @@ def mouseInCreditsButton(mouseX, mouseY, cX, cY, r):
 # game screen
 
 def game_redrawAll(app):
-    drawRect(0, 0, 800, 600, fill = 'black')
+    drawImage(app.cmuImage, 0, 0)
+    # drawRect(0, 0, 800, 600, fill = 'black')
     drawRect(740, 20, 40, 40, fill = None, border = app.creditsXButtonHighlight, borderWidth = 2)
     drawLabel('X', 760, 40, size = 40, fill = 'red')
-    drawImage(app.cmuImage, 0, 0)
 
     
 
