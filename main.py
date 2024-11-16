@@ -76,6 +76,27 @@ def guess_onStep(app):
             app.clockVisible=True
             setActiveScreen('game')
 
+def game_onStep(app):
+    if app.clockVisible:
+        app.counter+=1
+        print(app.counter)
+        app.clock=app.counter//app.stepsPerSecond
+        if app.counter>=app.stepsPerSecond*app.guessTime:
+            app.clockVisible=False
+
+            app.score += 0
+
+            app.roundNum += 1
+            app.lon = random.uniform(40.44018, 40.448876)
+            app.lat = random.uniform(-79.951096, -79.937617)
+            app.image = Spot(app.lon, app.lat, 0, -0.76)
+            app.image.getImage()
+            app.currLoc = app.image.latLonToPoint()
+
+
+            app.counter=0
+            app.clockVisible=True
+            setActiveScreen('game')
             
         
 
@@ -180,6 +201,9 @@ def game_redrawAll(app):
     drawLabel(f'Round:', 705, 160, size = 40, fill = 'white', bold = True)
     drawLabel(f'{app.roundNum}', 700, 220, size = 50, fill = 'white')
     drawLabel(f'Score: {app.score}', 700, 300, size = 30, fill = 'limeGreen')
+
+    if app.clockVisible:
+        drawLabel(f'Time Remaining:{app.guessTime-app.clock}'  's', 700,250,size=16,bold=True,fill='white')
 
     
 
