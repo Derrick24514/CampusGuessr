@@ -1,6 +1,6 @@
-from cmu_cpcs_utils import *
 from cmu_graphics import *
 import math
+from spot import Spot
 
 def onAppStart(app):
     setActiveScreen('mainScreen')
@@ -8,10 +8,13 @@ def onAppStart(app):
     app.height = 600
     app.leaderboard = {1:None, 2:None, 3:None, 4:None, 5:None, 6:None, 7:None, 8:None, 9:None, 10:None}
     # app.globe = 
-    app.map = 'cmu://872385/35004161/Hack112+Map+Final.png'
+    app.map = 'cmumap.jpg'
     app.pin = (400, 80)
     app.currLoc = (560, 500)
     app.score = 0
+    lon = 40.444646
+    lat = -79.942992
+    app.image = Spot(lon,lat,0,-0.76)
     
     app.startGameHighlight = 'white'
     app.howToPlayHighlight = 'white'
@@ -119,6 +122,7 @@ def mouseInXButton(app, mouseX, mouseY, rectX, rectY, width, height):
 
 def game_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
+    drawImage('street_view_image.jpg',0,0)
     drawRect(740, 20, 40, 40, fill = None, border = app.gameXButtonHighlight, borderWidth = 2)
     drawRect(600, 400, 160, 160, fill = None, border = 'white')
     
@@ -266,7 +270,6 @@ def credits_onMousePress(app, mouseX, mouseY):
 def guess_redrawAll(app):
     drawRect(0, 0, 800, 600, fill = 'black')
     drawImage(app.map, 0, 0)
-    
     drawCircle(app.pin[0], app.pin[1], 10, fill = 'red')
     drawLabel('Click around to guess!', 550, 40, fill = 'black', size = 30, bold = True)
     
@@ -321,7 +324,7 @@ def score_redrawAll(app):
     drawCircle(app.currLoc[0], app.currLoc[1], 10, fill = 'purple')
     drawLine(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1], fill = 'black')
 
-    drawLabel(f'You were {round(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
+    drawLabel(f'You were {rounded(distance(app.pin[0], app.pin[1], app.currLoc[0], app.currLoc[1]))}m away.', 600, 50, fill = 'black', size = 30, bold = True)
     drawLabel(f'Score + {app.score}', 600, 80, fill = 'black', size = 30, bold = True)
     
 # other functions
